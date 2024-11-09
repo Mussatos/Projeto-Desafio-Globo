@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:prova_p2_mobile/api/imdb.api.dart';
+import 'dart:async';
+
+import 'package:prova_p2_mobile/views/home.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    home: Home(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -57,7 +63,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
+  Future<void> _incrementCounter()  async {
+    await listMovies();
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
