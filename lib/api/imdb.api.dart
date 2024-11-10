@@ -9,8 +9,10 @@ const baseUrl = 'api.themoviedb.org';
 const apiKey =
     'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMjA2Zjk5YzlmZjhmMzE0MDUzNzJiZTUwNWRkODQ2MiIsIm5iZiI6MTczMTE3NjU4Ny41NTI1NTg0LCJzdWIiOiI2NzJmYTcxNzVhNjViYjgxOTBkZDJhMzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.ySdn-S6G--w2MP91r1239DvFhX2c2T82MugzSv0g5dI';
 
-Uri urlListMovies = Uri.https(baseUrl, '/3/discover/movie');
-Uri urlListTvShows = Uri.https(baseUrl, '/3/discover/tv');
+Uri urlListMovies =
+    Uri.https(baseUrl, '/3/discover/movie', {'language': 'pt-br'});
+Uri urlListTvShows =
+    Uri.https(baseUrl, '/3/discover/tv', {'language': 'pt-br'});
 
 Future<List<ListModel>> listMovies() async {
   try {
@@ -52,3 +54,55 @@ Future<List<ListModel>> listTvShows() async {
 Future<void> listMoviesWithCategory() async {}
 
 Future<void> listTvShowWithCategory() async {}
+
+Future<Map<String, dynamic>> fetchSingleMovie(int movieId) async {
+  Uri urlMovieDetail =
+      Uri.https(baseUrl, '/3/movie/${movieId}', {'language': 'pt-br'});
+  try {
+    final response = await http.get(urlMovieDetail, headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    });
+
+    if (response.statusCode == 200) {
+      final movie = jsonDecode(response.body);
+      return movie;
+    } else {
+      throw Exception();
+    }
+  } catch (err) {
+    print(err);
+    return {};
+  }
+}
+
+Future<Map<String, dynamic>> fetchSingleTvShow(int tvShowId) async {
+  Uri urlMovieDetail =
+      Uri.https(baseUrl, '/3/tv/${tvShowId}', {'language': 'pt-br'});
+  try {
+    final response = await http.get(urlMovieDetail, headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    });
+
+    if (response.statusCode == 200) {
+      final tvShow = jsonDecode(response.body);
+      return tvShow;
+    } else {
+      throw Exception();
+    }
+  } catch (err) {
+    print(err);
+    return {};
+  }
+}
+
+Future<void> fetchMovieCredits(String movieId) async {
+  Uri urlMovieCredits =
+      Uri.https(baseUrl, '/3/movie/${movieId}/credits', {'language': 'pt-br'});
+}
+
+Future<void> fetchTvShowCredits(String tvShowId) async {
+  Uri urlTvShowCredits =
+      Uri.https(baseUrl, '/3/tc/${tvShowId}/credits', {'language': 'pt-br'});
+}
