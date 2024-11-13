@@ -7,5 +7,6 @@ import 'package:prova_p2_mobile/views/home.dart';
 void main() {
   runApp(MaterialApp(
     home: Home(),
+    debugShowCheckedModeBanner: false,
   ));
 }

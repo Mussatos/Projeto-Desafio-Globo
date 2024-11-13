@@ -7,9 +7,11 @@ class TechnicalSheetMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Container(
       color: Color.fromRGBO(35, 35, 35, 1),
-      padding: EdgeInsets.all(16), // Espaçamento interno
+      height: screenHeight *0.5,
+      padding: EdgeInsets.all(16), // Espaçament interno
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
