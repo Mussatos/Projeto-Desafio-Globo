@@ -7,27 +7,28 @@ class TechnicalSheetMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      color: Color.fromRGBO(35, 35, 35, 1),
-      child: Column(
-        children: [
-          Row(
-            children: [Text('Título original: '), Text(movie.originalTitle)],
-          ),
-          Row(
-            children: [Text('Gênero: '), Text(movie.formatGenders())],
-          ),
-          Row(
-            children: [Text('Data de lançameto: '), Text(movie.releaseDate)],
-          ),
-          Row(
-            children: [Text('País: '), Text(movie.originCountry[0])],
-          ),
-          Row(
-            children: [Text('Título original: '), Text(movie.originalTitle)],
-          )
-        ],
-      ),
-    );
+        color: Colors.grey,
+        height: screenHeight * 0.5,
+        child: Column(
+          children: [
+            Row(
+              children: [Text('Título original: '), Text(movie.originalTitle)],
+            ),
+            Row(
+              children: [Text('Gênero: '), Text(movie.formatGenders())],
+            ),
+            Row(
+              children: [Text('Data de lançameto: '), Text(movie.releaseDate)],
+            ),
+            Row(
+              children: [Text('País: '), Text(movie.originCountry[0])],
+            ),
+            Row(
+              children: [Text('Título original: '), Text(movie.originalTitle)],
+            ),
+          ],
+        ));
   }
 }

@@ -30,6 +30,7 @@ class DetailedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -61,7 +62,9 @@ class DetailedView extends StatelessWidget {
                           ElevatedButton(
                               onPressed: () => print('clicou'),
                               child: Text('btn-1')),
-                          SizedBox(width: 20,),
+                          SizedBox(
+                            width: 20,
+                          ),
                           ElevatedButton(
                               onPressed: () => print('clicou'),
                               child: Text('btn-2')),
@@ -69,8 +72,8 @@ class DetailedView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (type == 'Filmes')
-                    TechnicalSheetMovie(movie: item as MovieDetailModel)
+                   if (type == 'Filmes')
+                     TechnicalSheetMovie(movie: item as MovieDetailModel)
                 ],
               ),
             ),

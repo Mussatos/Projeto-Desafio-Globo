@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prova_p2_mobile/api/imdb.api.dart';
 import 'package:prova_p2_mobile/components/list_all.dart';
 import 'package:prova_p2_mobile/model/list.model.dart';
+import 'package:prova_p2_mobile/views/list_favorite_view.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -18,9 +19,12 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ListFavoriteView()),
+      );
+    }
   }
 
   Future<void> fetchLists() async {
@@ -51,18 +55,16 @@ class _HomeState extends State<Home> {
             );
           else {
             return SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListAll(
-                    title: 'Filmes',
-                    items: movieList,
-                  ),
-                  ListAll(
-                    title: 'Séries',
-                    items: tvShowList,
-                  )
-                ],
-              ),
+              child: Column(children: [
+                ListAll(
+                  title: 'Filmes',
+                  items: movieList,
+                ),
+                ListAll(
+                  title: 'Séries',
+                  items: tvShowList,
+                )
+              ]),
             );
           }
         },
