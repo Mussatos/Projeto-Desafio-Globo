@@ -9,26 +9,105 @@ class TechnicalSheetMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-        color: Colors.grey,
-        height: screenHeight * 0.5,
-        child: Column(
-          children: [
-            Row(
-              children: [Text('Título original: '), Text(movie.originalTitle)],
-            ),
-            Row(
-              children: [Text('Gênero: '), Text(movie.formatGenders())],
-            ),
-            Row(
-              children: [Text('Data de lançameto: '), Text(movie.releaseDate)],
-            ),
-            Row(
-              children: [Text('País: '), Text(movie.originCountry[0])],
-            ),
-            Row(
-              children: [Text('Título original: '), Text(movie.originalTitle)],
-            ),
-          ],
-        ));
+      color: Color.fromRGBO(35, 35, 35, 1),
+      height: screenHeight *0.5,
+      padding: EdgeInsets.all(16), // Espaçament interno
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('Ficha Tecnica',
+              style: TextStyle(
+                  color:  Colors.white, 
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Text(
+                'Título original: ',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 177, 169, 169), 
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                movie.originalTitle,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 177, 169, 169), 
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8), 
+          Row(
+            children: [
+              Text(
+                'Gênero: ',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 177, 169, 169),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                movie.formatGenders(),
+                style: TextStyle(
+                  color: Color.fromARGB(255, 177, 169, 169),
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              Text(
+                'Data de lançamento: ',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 177, 169, 169),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                movie.releaseDate,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 177, 169, 169),
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              Text(
+                'País: ',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 177, 169, 169),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                movie.originCountry[0],
+                style: TextStyle(
+                  color: Color.fromARGB(255, 177, 169, 169),
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
