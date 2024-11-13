@@ -27,6 +27,7 @@ class DetailedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -43,15 +44,16 @@ class DetailedView extends StatelessWidget {
 
           item = item as MovieDetailModel;
           return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ItemDetailHeader(
-                  description: item.overview,
-                  imageUrl: item.imageUrl,
-                  title: item.title ?? item.name!,
-                  type: type,
-                ),
+            child: SizedBox(
+               height: screenHeight * 0.9,
+              child: Column(
+                children: [
+                  ItemDetailHeader(
+                      description: item.overview,
+                      imageUrl: item.imageUrl,
+                      title: item.title ?? item.name!,
+                      type: type),
+
                 Container(
                   color: Colors.black,
                   padding: const EdgeInsets.all(16.0),
@@ -145,12 +147,10 @@ class DetailedView extends StatelessWidget {
                 // A ficha técnica do filme (sem o Expanded)
                 if (type == 'Filmes')
                     TechnicalSheetMovie(movie: item as MovieDetailModel),
-                  
-              ],
+             
+       
+              ])
             ),
           );
-        },
-      ),
-    );
-  }
-}
+  }),
+    );}}
