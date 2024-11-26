@@ -10,20 +10,21 @@ class TechnicalSheetMovie extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
       color: Color.fromRGBO(35, 35, 35, 1),
-      height: screenHeight *0.5,
+      height: screenHeight * 0.5,
       padding: EdgeInsets.all(16), // Espaçament interno
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text('Ficha Tecnica',
-              style: TextStyle(
-                  color:  Colors.white, 
+              Text(
+                'Ficha Tecnica',
+                style: TextStyle(
+                  color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  ),
                 ),
+              ),
             ],
           ),
           SizedBox(height: 10),
@@ -32,7 +33,7 @@ class TechnicalSheetMovie extends StatelessWidget {
               Text(
                 'Título original: ',
                 style: TextStyle(
-                  color: const Color.fromARGB(255, 177, 169, 169), 
+                  color: const Color.fromARGB(255, 177, 169, 169),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -40,13 +41,13 @@ class TechnicalSheetMovie extends StatelessWidget {
               Text(
                 movie.originalTitle,
                 style: TextStyle(
-                  color: Color.fromARGB(255, 177, 169, 169), 
+                  color: Color.fromARGB(255, 177, 169, 169),
                   fontSize: 16,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8), 
+          SizedBox(height: 8),
           Row(
             children: [
               Text(

@@ -21,17 +21,17 @@ class _DetailedViewState extends State<DetailedView>
   late TabController _tabController;
   bool isAdded = false;
 
-  void toggleButton() {
-    setState(() {
-      isAdded = !isAdded;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     fetchItem();
+  }
+
+  void toggleButton() {
+    setState(() {
+      isAdded = !isAdded;
+    });
   }
 
   Future<void> fetchItem() async {
