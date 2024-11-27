@@ -73,6 +73,7 @@ Future<MovieDetailModel> fetchSingleMovie(int movieId) async {
   } catch (err) {
     print(err);
     return MovieDetailModel(
+        id: 0,
         genres: [],
         imageUrl: '',
         originCountry: [],

@@ -4,6 +4,7 @@ import 'package:prova_p2_mobile/components/item_detail_header.dart';
 import 'package:prova_p2_mobile/components/technical_sheet_movie.dart';
 import 'package:prova_p2_mobile/model/item_detail.abstract.model.dart';
 import 'package:prova_p2_mobile/model/movie_detail.model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailedView extends StatefulWidget {
   final int itemId;
@@ -26,26 +27,50 @@ class _DetailedViewState extends State<DetailedView>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     fetchItem();
+    checkIfFavorite(); // Verifica se o item já está nos favoritos
   }
 
-  void toggleButton() {
-    setState(() {
-      isAdded = !isAdded;
-    });
-  }
-
+  /// Carrega os dados do item com base no tipo
   Future<void> fetchItem() async {
     switch (widget.type) {
       case "Filmes":
         item = await fetchSingleMovie(widget.itemId);
         break;
       case "Séries":
-        // item = await fetchSingleTvShow(itemId);
+        // Implementação para séries, caso necessário
         break;
       default:
         print('Erro ao carregar dados.');
     }
     setState(() {}); // Atualizar a interface após carregar o item
+  }
+
+  /// Verifica se o item está na lista de favoritos
+  Future<void> checkIfFavorite() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favoriteMovies = prefs.getStringList('favorites') ?? [];
+    setState(() {
+      isAdded = favoriteMovies.contains(widget.itemId.toString());
+    });
+  }
+
+  /// Adiciona ou remove o item dos favoritos
+  void toggleButton() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favoriteMovies = prefs.getStringList('favorites') ?? [];
+
+    setState(() {
+      if (isAdded) {
+        // Remove o ID do filme da lista de favoritos
+        favoriteMovies.remove(widget.itemId.toString());
+      } else {
+        // Adiciona o ID do filme à lista de favoritos
+        favoriteMovies.add(widget.itemId.toString());
+      }
+      isAdded = !isAdded;
+    });
+
+    await prefs.setStringList('favorites', favoriteMovies);
   }
 
   @override
@@ -131,7 +156,9 @@ class _DetailedViewState extends State<DetailedView>
                               Text(
                                 isAdded ? 'Adicionado' : 'Minha Lista',
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 177, 169, 169),
+                                  color: isAdded
+                                      ? Colors.yellow
+                                      : Color.fromARGB(255, 177, 169, 169),
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -185,7 +212,6 @@ class _DetailedViewState extends State<DetailedView>
                     ],
                   ),
                 ),
-
                 Expanded(
                   child: TabBarView(
                     controller: _tabController,
@@ -193,8 +219,7 @@ class _DetailedViewState extends State<DetailedView>
                       // Aba de "Assista Também"
                       Text('Filmes relacionados',
                           style: TextStyle(color: Colors.black)),
-
-                      //ABA DETALHES
+                      // Aba "Detalhes"
                       SingleChildScrollView(
                         child: Column(
                           children: [

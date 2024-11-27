@@ -11,6 +11,7 @@ class MovieDetailModel extends ItemDetail {
   String imageUrl;
   List genres;
   List originCountry;
+  int? id;
 
   MovieDetailModel(
       {required this.genres,
@@ -19,7 +20,9 @@ class MovieDetailModel extends ItemDetail {
       required this.overview,
       required this.releaseDate,
       required this.title,
-      required this.imageUrl}) : super();
+      required this.imageUrl,
+      required this.id})
+      : super();
 
   String formatGenders() {
     return genres.map((genre) => genre['name']).join(', ');
@@ -27,6 +30,7 @@ class MovieDetailModel extends ItemDetail {
 
   factory MovieDetailModel.fromJson(Map<String, dynamic> json) {
     return MovieDetailModel(
+        id: json['id'] ?? 0,
         overview: json['overview'] ?? '',
         title: json['title'] ?? '',
         originalTitle: json['original_title'] ?? '',
