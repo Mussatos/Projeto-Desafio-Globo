@@ -18,6 +18,7 @@ class ItemDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.only(top: 50),
       decoration: BoxDecoration(
           image: DecorationImage(
