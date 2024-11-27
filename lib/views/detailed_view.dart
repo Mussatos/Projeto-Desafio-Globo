@@ -306,8 +306,7 @@ class _DetailedViewState extends State<DetailedView>
                                   );
                                 },
                               ),
-                              SingleChildScrollView(
-                                child: Column(
+                               Column(
                                   children: [
                                     if (widget.type == 'Filmes')
                                       TechnicalSheetMovie(
@@ -317,7 +316,6 @@ class _DetailedViewState extends State<DetailedView>
                                           movie: item as TvShowDetailModel),
                                   ],
                                 ),
-                              ),
                             ],
                           ),
                   ),
