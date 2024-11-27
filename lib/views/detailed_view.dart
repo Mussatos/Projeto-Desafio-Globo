@@ -293,7 +293,7 @@ class _DetailedViewState extends State<DetailedView>
                                         MaterialPageRoute(
                                           builder: (context) => DetailedView(
                                               itemId: rec.itemId,
-                                              type: 'Filmes'),
+                                              type: widget.type),
                                         ),
                                       );
                                     },
