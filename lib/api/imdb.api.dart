@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:prova_p2_mobile/model/list.model.dart';
 import 'package:prova_p2_mobile/model/movie_detail.model.dart';
+import 'package:prova_p2_mobile/model/tv_show_detail.model.dart';
 
 const baseUrl = 'api.themoviedb.org';
 const apiKey =
@@ -73,6 +74,7 @@ Future<MovieDetailModel> fetchSingleMovie(int movieId) async {
   } catch (err) {
     print(err);
     return MovieDetailModel(
+        id: 0,
         genres: [],
         imageUrl: '',
         originCountry: [],
@@ -83,7 +85,7 @@ Future<MovieDetailModel> fetchSingleMovie(int movieId) async {
   }
 }
 
-Future<Map<String, dynamic>> fetchSingleTvShow(int tvShowId) async {
+Future<TvShowDetailModel> fetchSingleTvShow(int tvShowId) async {
   Uri urlMovieDetail =
       Uri.https(baseUrl, '/3/tv/${tvShowId}', {'language': 'pt-br'});
   try {
@@ -93,14 +95,22 @@ Future<Map<String, dynamic>> fetchSingleTvShow(int tvShowId) async {
     });
 
     if (response.statusCode == 200) {
-      final tvShow = jsonDecode(response.body);
+      final tvShow = TvShowDetailModel.fromJson(jsonDecode(response.body));
       return tvShow;
     } else {
       throw Exception();
     }
   } catch (err) {
     print(err);
-    return {};
+    return TvShowDetailModel(
+        id: 0,
+        genres: [],
+        imageUrl: '',
+        originCountry: [],
+        originalTitle: '',
+        overview: '',
+        releaseDate: '',
+        title: '');
   }
 }
 
