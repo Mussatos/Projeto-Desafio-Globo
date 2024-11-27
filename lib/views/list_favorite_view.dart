@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:prova_p2_mobile/api/imdb.api.dart';
+import 'package:prova_p2_mobile/model/item_detail.abstract.model.dart';
 import 'package:prova_p2_mobile/model/movie_detail.model.dart';
+import 'package:prova_p2_mobile/model/tv_show_detail.model.dart';
 import 'package:prova_p2_mobile/views/home.dart';
 import 'package:prova_p2_mobile/views/detailed_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +17,7 @@ class ListFavoriteView extends StatefulWidget {
 }
 
 class _ListFavoriteView extends State<ListFavoriteView> {
-  List<MovieDetailModel> favoriteMovies = [];
+  List<dynamic> favoriteMovies = [];
   int _selectedIndex = 0;
 
   @override
@@ -26,13 +30,19 @@ class _ListFavoriteView extends State<ListFavoriteView> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> favoriteIds = prefs.getStringList('favorites') ?? [];
 
-    List<MovieDetailModel> fetchedMovies = [];
-    for (String id in favoriteIds) {
+    List<dynamic> fetchedMovies = [];
+    for (String favorite in favoriteIds) {
       try {
-        final movie = await fetchSingleMovie(int.parse(id));
-        if (movie != null) fetchedMovies.add(movie);
+        final item = jsonDecode(favorite);
+        if (item['type'] == 'Filmes') {
+          final movie = await fetchSingleMovie(int.parse(item['id']));
+          if (movie != null) fetchedMovies.add({'item': movie, 'type': item['type']});
+        } else {
+          final tvShow = await fetchSingleTvShow(int.parse(item['id']));
+          if (tvShow != null) fetchedMovies.add({'item': tvShow, 'type': item['type']});
+        }
       } catch (err) {
-        print("Erro ao buscar filme com ID $id: $err");
+        print("Erro ao buscar filme ou série: $err");
       }
     }
 
@@ -87,9 +97,9 @@ class _ListFavoriteView extends State<ListFavoriteView> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailedView(
-                            itemId: movie.id!,
+                            itemId: movie['item'].id,
                             type:
-                                "Filmes", // Ajuste para "Séries" caso necessário
+                                movie['type'], 
                           ),
                         ),
                       );
@@ -97,12 +107,12 @@ class _ListFavoriteView extends State<ListFavoriteView> {
                     child: Column(
                       children: [
                         Expanded(
-                          child: movie.imageUrl != null &&
-                                  movie.imageUrl.isNotEmpty
+                          child: movie['item'].imageUrl != null &&
+                                  movie['item'].imageUrl.isNotEmpty
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: Image.network(
-                                    'https://image.tmdb.org/t/p/w500/${movie.imageUrl}',
+                                    'https://image.tmdb.org/t/p/w500/${movie['item'].imageUrl}',
                                     fit: BoxFit.cover,
                                   ),
                                 )
@@ -111,7 +121,7 @@ class _ListFavoriteView extends State<ListFavoriteView> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          movie.title ?? "Título desconhecido",
+                          movie['item'].title ?? "Título desconhecido",
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -141,17 +151,5 @@ class _ListFavoriteView extends State<ListFavoriteView> {
         ],
       ),
     );
-  }
-
-  Future<void> removeFavorite(int movieId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> favoriteIds = prefs.getStringList('favorites') ?? [];
-
-    setState(() {
-      favoriteMovies.removeWhere((movie) => movie.id == movieId);
-      favoriteIds.remove(movieId.toString());
-    });
-
-    await prefs.setStringList('favorites', favoriteIds);
   }
 }
