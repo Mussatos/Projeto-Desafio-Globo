@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:prova_p2_mobile/api/imdb.api.dart';
 import 'package:prova_p2_mobile/components/item_detail_header.dart';
 import 'package:prova_p2_mobile/components/technical_sheet_movie.dart';
+import 'package:prova_p2_mobile/components/technical_sheet_tv_show.dart';
 import 'package:prova_p2_mobile/model/item_detail.abstract.model.dart';
 import 'package:prova_p2_mobile/model/movie_detail.model.dart';
+import 'package:prova_p2_mobile/model/tv_show_detail.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailedView extends StatefulWidget {
@@ -21,28 +23,34 @@ class _DetailedViewState extends State<DetailedView>
   late ItemDetail item;
   late TabController _tabController;
   bool isAdded = false;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
     fetchItem();
+    _tabController = TabController(length: 2, vsync: this);
     checkIfFavorite(); // Verifica se o item já está nos favoritos
   }
 
   /// Carrega os dados do item com base no tipo
   Future<void> fetchItem() async {
+    setState(() {
+      isLoading = true;
+    });
     switch (widget.type) {
       case "Filmes":
         item = await fetchSingleMovie(widget.itemId);
         break;
       case "Séries":
-        // Implementação para séries, caso necessário
+        item = await fetchSingleTvShow(widget.itemId);
         break;
       default:
         print('Erro ao carregar dados.');
     }
-    setState(() {}); // Atualizar a interface após carregar o item
+    setState(() {
+      isLoading = false;
+    }); // Atualizar a interface após carregar o item
   }
 
   /// Verifica se o item está na lista de favoritos
@@ -82,8 +90,8 @@ class _DetailedViewState extends State<DetailedView>
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: item == null
-          ? Center(child: CircularProgressIndicator())
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 ItemDetailHeader(
@@ -225,7 +233,11 @@ class _DetailedViewState extends State<DetailedView>
                           children: [
                             if (widget.type == 'Filmes')
                               TechnicalSheetMovie(
-                                  movie: item as MovieDetailModel),
+                                  movie: item as MovieDetailModel)
+                            else 
+                                if (widget.type == 'Séries')
+                              TechnicalSheetTvShow(
+                                  movie: item as TvShowDetailModel),
                           ],
                         ),
                       ),

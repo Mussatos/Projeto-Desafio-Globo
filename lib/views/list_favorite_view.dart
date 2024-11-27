@@ -102,7 +102,7 @@ class _ListFavoriteView extends State<ListFavoriteView> {
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: Image.network(
-                                    movie.imageUrl,
+                                    'https://image.tmdb.org/t/p/w500/${movie.imageUrl}',
                                     fit: BoxFit.cover,
                                   ),
                                 )
