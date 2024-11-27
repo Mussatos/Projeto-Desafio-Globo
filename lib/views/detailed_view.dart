@@ -35,7 +35,7 @@ class _DetailedViewState extends State<DetailedView>
   void initState() {
     super.initState();
     fetchItem();
-    fetchMovies();
+    fetchItens();
     _tabController = TabController(length: 2, vsync: this);
     checkIfFavorite();
   }
@@ -64,7 +64,7 @@ class _DetailedViewState extends State<DetailedView>
     }
   }
 
-  Future<void> fetchMovies() async {
+  Future<void> fetchItens() async {
     setState(() {
       isLoadingTabBar = true;
     });
