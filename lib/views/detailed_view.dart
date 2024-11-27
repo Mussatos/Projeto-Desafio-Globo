@@ -35,7 +35,7 @@ class _DetailedViewState extends State<DetailedView>
   void initState() {
     super.initState();
     fetchItem();
-    fetchMovies();
+    fetchItens();
     _tabController = TabController(length: 2, vsync: this);
     checkIfFavorite();
   }
@@ -64,7 +64,7 @@ class _DetailedViewState extends State<DetailedView>
     }
   }
 
-  Future<void> fetchMovies() async {
+  Future<void> fetchItens() async {
     setState(() {
       isLoadingTabBar = true;
     });
@@ -293,7 +293,7 @@ class _DetailedViewState extends State<DetailedView>
                                         MaterialPageRoute(
                                           builder: (context) => DetailedView(
                                               itemId: rec.itemId,
-                                              type: 'Filmes'),
+                                              type: widget.type),
                                         ),
                                       );
                                     },
@@ -306,8 +306,7 @@ class _DetailedViewState extends State<DetailedView>
                                   );
                                 },
                               ),
-                              SingleChildScrollView(
-                                child: Column(
+                               Column(
                                   children: [
                                     if (widget.type == 'Filmes')
                                       TechnicalSheetMovie(
@@ -317,7 +316,6 @@ class _DetailedViewState extends State<DetailedView>
                                           movie: item as TvShowDetailModel),
                                   ],
                                 ),
-                              ),
                             ],
                           ),
                   ),
