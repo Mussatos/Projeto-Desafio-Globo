@@ -4,6 +4,7 @@ import 'package:prova_p2_mobile/components/item_detail_header.dart';
 import 'package:prova_p2_mobile/components/technical_sheet_movie.dart';
 import 'package:prova_p2_mobile/components/technical_sheet_tv_show.dart';
 import 'package:prova_p2_mobile/model/item_detail.abstract.model.dart';
+import 'package:prova_p2_mobile/model/list.model.dart';
 import 'package:prova_p2_mobile/model/movie_detail.model.dart';
 import 'package:prova_p2_mobile/model/tv_show_detail.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,36 +25,53 @@ class _DetailedViewState extends State<DetailedView>
   late TabController _tabController;
   bool isAdded = false;
   bool isLoading = false;
+  List<ListModel> movies = [];
+  List<ListModel> series = [];
+
 
   @override
   void initState() {
     super.initState();
     fetchItem();
     _tabController = TabController(length: 2, vsync: this);
-    checkIfFavorite(); // Verifica se o item já está nos favoritos
+    checkIfFavorite();
+    fetchMovies();
   }
 
-  /// Carrega os dados do item com base no tipo
   Future<void> fetchItem() async {
     setState(() {
       isLoading = true;
     });
-    switch (widget.type) {
-      case "Filmes":
-        item = await fetchSingleMovie(widget.itemId);
-        break;
-      case "Séries":
-        item = await fetchSingleTvShow(widget.itemId);
-        break;
-      default:
-        print('Erro ao carregar dados.');
+    try {
+      switch (widget.type) {
+        case "Filmes":
+          item = await fetchSingleMovie(widget.itemId);
+          break;
+        case "Séries":
+          item = await fetchSingleTvShow(widget.itemId);
+          break;
+        default:
+          print('Erro ao carregar dados.');
+      }
+    } catch (e) {
+      print('Erro ao buscar item: $e');
+    } finally {
+      setState(() {
+        isLoading = false; 
+      });
     }
-    setState(() {
-      isLoading = false;
-    }); // Atualizar a interface após carregar o item
   }
 
-  /// Verifica se o item está na lista de favoritos
+  Future<void> fetchMovies() async {
+    try {
+      movies = await listMovies();
+      series = await listTvShows();
+    } catch (e) {
+      print('Erro ao buscar filmes ou séries: $e');
+    }
+  print(widget.type);
+  }
+
   Future<void> checkIfFavorite() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> favoriteMovies = prefs.getStringList('favorites') ?? [];
@@ -62,17 +80,14 @@ class _DetailedViewState extends State<DetailedView>
     });
   }
 
-  /// Adiciona ou remove o item dos favoritos
   void toggleButton() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> favoriteMovies = prefs.getStringList('favorites') ?? [];
 
     setState(() {
       if (isAdded) {
-        // Remove o ID do filme da lista de favoritos
         favoriteMovies.remove(widget.itemId.toString());
       } else {
-        // Adiciona o ID do filme à lista de favoritos
         favoriteMovies.add(widget.itemId.toString());
       }
       isAdded = !isAdded;
@@ -92,7 +107,8 @@ class _DetailedViewState extends State<DetailedView>
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Column(
+          : SingleChildScrollView(
+            child: Column(
               children: [
                 ItemDetailHeader(
                   description: item.overview,
@@ -100,7 +116,6 @@ class _DetailedViewState extends State<DetailedView>
                   title: item.title ?? item.name!,
                   type: widget.type,
                 ),
-                // Botões "Assista" e "Minha Lista"
                 Container(
                   color: Colors.black,
                   padding: const EdgeInsets.all(16.0),
@@ -220,31 +235,60 @@ class _DetailedViewState extends State<DetailedView>
                     ],
                   ),
                 ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      // Aba de "Assista Também"
-                      Text('Filmes relacionados',
-                          style: TextStyle(color: Colors.black)),
-                      // Aba "Detalhes"
-                      SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            if (widget.type == 'Filmes')
-                              TechnicalSheetMovie(
-                                  movie: item as MovieDetailModel)
-                            else 
-                                if (widget.type == 'Séries')
-                              TechnicalSheetTvShow(
-                                  movie: item as TvShowDetailModel),
-                          ],
+                  Container(
+                    color: Color.fromRGBO(35, 35, 35, 1),
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    padding: EdgeInsets.symmetric(horizontal: 10), 
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3, 
+                              childAspectRatio: 0.6, 
+                              crossAxisSpacing: 10.0, 
+                              mainAxisSpacing: 8.0, 
+                            ),
+                             itemCount: (widget.type == 'Filmes'
+                            ? movies.where((rec) => rec.itemId != widget.itemId).length
+                            : series.where((rec) => rec.itemId != widget.itemId).length), 
+                        itemBuilder: (context, index) {
+                          final rec = (widget.type == 'Filmes'
+                              ? movies.where((rec) => rec.itemId != widget.itemId).toList()[index]
+                              : series.where((rec) => rec.itemId != widget.itemId).toList()[index]); 
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailedView(itemId: rec.itemId, type: 'Filmes'),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  child: Image.network(
+                                    'https://image.tmdb.org/t/p/w500/${rec.imageUrl}',
+                                    fit: BoxFit.contain, 
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              if (widget.type == 'Filmes')
+                                TechnicalSheetMovie(movie: item as MovieDetailModel)
+                              else if (widget.type == 'Séries')
+                                TechnicalSheetTvShow(movie: item as TvShowDetailModel),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
     );
   }
