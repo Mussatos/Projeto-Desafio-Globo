@@ -4,11 +4,17 @@ Projeto feito em Flutter do desafio Globoplay.
 
 Contém:
 Tela de splash;
+
 Listagem dos filmes;
+
 Minha lista;
+
 Detalhes do filme;
+
 Favoritar/Desfavoritar filmes;
+
 Layout estruturado;
+
 Tratamento de erro.
 
 
