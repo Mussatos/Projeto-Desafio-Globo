@@ -3,6 +3,7 @@
 Projeto feito em Flutter do desafio Globoplay.
 
 Contém:
+
 Tela de splash;
 
 Listagem dos filmes;
