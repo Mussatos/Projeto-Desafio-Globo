@@ -1,8 +1,16 @@
-# prova_p2_mobile
+# Projeto Desafio Globoplay
 
-A new Flutter project.
+Projeto feito em Flutter do desafio Globoplay.
 
-## Getting Started
+Contém:
+Tela de splash;
+Listagem dos filmes;
+Minha lista;
+Detalhes do filme;
+Favoritar/Desfavoritar filmes;
+Layout estruturado;
+Tratamento de erro.
+
 
 This project is a starting point for a Flutter application.
 
